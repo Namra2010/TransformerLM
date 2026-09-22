@@ -1,0 +1,53 @@
+device: auto
+
+model:
+  vocab_size: 10000
+  context_length: 256
+  d_model: 512
+  num_layers: 4
+  num_heads: 16
+  d_ff: 1344
+  rope_theta: 10000
+
+
+optimizer:
+  lr: 0.001
+  min_lr: null
+  warmup_iters: 100
+  beta1: 0.9
+  beta2: 0.95
+  eps: 1.0e-8
+  grad_clip: 1.0
+  weight_decay: 0.01
+
+
+training:
+  max_steps: 20000
+  total_tokens: 327680000
+  batch_size: 64
+  seed: 0
+
+
+data:
+  data_dtype: uint16
+  train_data: data/TinyStoriesV2-GPT4-train.npy
+  val_data: data/TinyStoriesV2-GPT4-valid.npy
+  vocab_path: data/vocab_tinystories.json
+  merges_path: data/merges_tinystories.txt
+  ckpt_path: runs/default/ckpt_best.pt
+
+
+out_dir: runs/default
+resume: null
+log_interval: 50
+eval_interval: 500
+eval_batches: 20
+ckpt_interval: 2000
+wandb: false
+wandb_project: cse587-nlp-a1
+run_name: null
+
+eos_token: '<|endoftext|>'
+max_new_tokens:
+temperature:
+top_p:
