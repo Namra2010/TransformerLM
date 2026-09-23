@@ -1,3 +1,6 @@
+import os
+
+import numpy as np
 import regex as re
 import pickle
 from typing import Iterable, Iterator
@@ -136,3 +139,18 @@ class Tokenizer:
 
         output = [self.bytes_to_vocab_seq[b] for b in token]
         return output
+
+
+if __name__ == '__main__':
+    output_dir = "output"
+    os.makedirs(output_dir, exist_ok=True)
+    vocab_path = os.path.join(output_dir, "vocab.pkl")
+    merges_path = os.path.join(output_dir, "merges.pkl")
+    dataset_path = "data/TinyStoriesV2-GPT4-train.txt"
+    encoded_dataset_path = os.path.join(output_dir, "encoded_dataset.npy")
+
+    tokenizer = Tokenizer.from_files(vocab_path, merges_path, ["<|endoftext|>"])
+
+    with open(dataset_path, encoding="utf-8") as dataset:
+        encoded_ids = np.fromiter(tokenizer.encode_iterable(dataset), dtype=np.uint16)
+    np.save(encoded_dataset_path, encoded_ids)

@@ -1,6 +1,7 @@
 #Byte-Pair Encoding Tokenizer (BPE) implementation
 
 import cProfile
+import pickle
 import pstats
 
 import regex as re
@@ -161,31 +162,38 @@ def bpe_tokenizer_model(
 
     return vocab, merges
 
-# if __name__ == "__main__":
-#     input_path = "/Users/namragandhi/Acads/NLP/assignment1-basics/data/TinyStoriesV2-GPT4-train.txt"
-#     vocab_size = 10000
-#     special_tokens = ["<|endoftext|>"]
+if __name__ == "__main__":
+    input_path = "data/TinyStoriesV2-GPT4-train.txt"
+    vocab_size = 10000
+    special_tokens = ["<|endoftext|>"]
 
-#     profiler = cProfile.Profile()
-#     profiler.enable()
-#     vocab, merges = bpe_tokenizer_model(input_path, vocab_size, special_tokens)
-#     profiler.disable()
-#     profiler.dump_stats("profile_output.prof")
-#     stats = pstats.Stats(profiler).sort_stats("cumtime")
-#     stats.print_stats(20)
-    
-#     print(vocab)
-#     print(merges)
+    profiler = cProfile.Profile()
+    profiler.enable()
+    vocab, merges = bpe_tokenizer_model(input_path, vocab_size, special_tokens)
+    profiler.disable()
+    profiler.dump_stats("profile_output.prof")
+    stats = pstats.Stats(profiler).sort_stats("cumtime")
+    stats.print_stats(20)
 
-#     assert len(vocab) == 10000
-#     assert len(merges) == 10000 - 256 - 1  # minus 256 base bytes, minus special tokens
+    output_dir = "output"
+    os.makedirs(output_dir, exist_ok=True)
+    vocab_path = os.path.join(output_dir, "vocab.pkl")
+    merges_path = os.path.join(output_dir, "merges.pkl")
 
-#     # All 256 raw bytes should be present as single-byte tokens
-#     for i in range(256):
-#         assert vocab[i] == bytes([i])
+    with open(vocab_path, "wb") as f:
+        pickle.dump(vocab, f)
+    with open(merges_path, "wb") as f:
+        pickle.dump(merges, f)
 
-#     # Special token should be present
-#     assert b"<|endoftext|>" in vocab.values()
+    assert len(vocab) == 10000
+    assert len(merges) == 10000 - 256 - 1  # minus 256 base bytes, minus special tokens
 
-#     # No duplicate vocab entries
-#     assert len(set(vocab.values())) == len(vocab)
+    # All 256 raw bytes should be present as single-byte tokens
+    for i in range(256):
+        assert vocab[i] == bytes([i])
+
+    # Special token should be present
+    assert b"<|endoftext|>" in vocab.values()
+
+    # No duplicate vocab entries
+    assert len(set(vocab.values())) == len(vocab)
