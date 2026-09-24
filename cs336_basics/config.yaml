@@ -25,6 +25,7 @@ training:
   max_steps: 20000
   total_tokens: 327680000
   batch_size: 64
+  context_length: 256
   seed: 0
 
 
