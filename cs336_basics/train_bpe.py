@@ -163,30 +163,30 @@ def bpe_tokenizer_model(
     return vocab, merges
 
 if __name__ == "__main__":
-    input_path = "data/TinyStoriesV2-GPT4-train.txt"
-    vocab_size = 10000
+    input_path = "data/owt_train.txt"
+    vocab_size = 32000
     special_tokens = ["<|endoftext|>"]
 
     profiler = cProfile.Profile()
     profiler.enable()
     vocab, merges = bpe_tokenizer_model(input_path, vocab_size, special_tokens)
     profiler.disable()
-    profiler.dump_stats("profile_output.prof")
+    profiler.dump_stats("profile_output_owt.prof")
     stats = pstats.Stats(profiler).sort_stats("cumtime")
     stats.print_stats(20)
 
     output_dir = "output"
     os.makedirs(output_dir, exist_ok=True)
-    vocab_path = os.path.join(output_dir, "vocab.pkl")
-    merges_path = os.path.join(output_dir, "merges.pkl")
+    vocab_path = os.path.join(output_dir, "vocab_owt.pkl")
+    merges_path = os.path.join(output_dir, "merges_owt.pkl")
 
     with open(vocab_path, "wb") as f:
         pickle.dump(vocab, f)
     with open(merges_path, "wb") as f:
         pickle.dump(merges, f)
 
-    assert len(vocab) == 10000
-    assert len(merges) == 10000 - 256 - 1  # minus 256 base bytes, minus special tokens
+    assert len(vocab) == 32000
+    assert len(merges) == 32000 - 256 - 1  # minus 256 base bytes, minus special tokens
 
     # All 256 raw bytes should be present as single-byte tokens
     for i in range(256):

@@ -44,7 +44,7 @@ class MetricLogger:
         if config["wandb"]:
             import wandb
             self.wandb = wandb
-            wandb.init(project=config["project"], name=config["run_name"], config=config, dir=config["out_dir"])
+            wandb.init(project=config["wandb_project"], name=config["run_name"], config=config, dir=config["out_dir"])
 
     def log(self, step: int, metrics: dict) -> None:
         if self.wandb is not None:

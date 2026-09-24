@@ -32,8 +32,8 @@ data:
   data_dtype: uint16
   train_data: data/TinyStoriesV2-GPT4-train.npy
   val_data: data/TinyStoriesV2-GPT4-valid.npy
-  vocab_path: data/vocab_tinystories.json
-  merges_path: data/merges_tinystories.txt
+  vocab_path: data/vocab.pkl
+  merges_path: data/merges.pkl
   ckpt_path: runs/default/ckpt_best.pt
 
 
