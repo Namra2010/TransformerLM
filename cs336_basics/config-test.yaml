@@ -1,0 +1,55 @@
+device: auto
+
+model:
+  vocab_size: 10000        # must match your actual vocab.pkl size — do not shrink this
+  context_length: 32       # shrunk from 256 for speed
+  d_model: 64               # shrunk from 512
+  num_layers: 2             # shrunk from 4
+  num_heads: 4               # 64 / 4 = 16 head_dim, divides evenly
+  d_ff: 256                  # shrunk from 1344 (no constraint here, just used directly)
+  rope_theta: 10000
+
+
+optimizer:
+  lr: 0.001
+  min_lr: 0.0001            # was `null` — that would crash lr_cosine_schedule, must be a number (or delete the key)
+  warmup_iters: 5           # must be < max_steps below
+  beta1: 0.9
+  beta2: 0.95
+  eps: 1.0e-8
+  grad_clip: 1.0
+  weight_decay: 0.01
+
+
+training:
+  max_steps: 40             # tiny run just to exercise every code path
+  total_tokens: 327680000   # unused since max_steps is set — ignored, left as-is
+  batch_size: 4              # shrunk from 64
+  seed: 0
+  context_length: 32
+
+
+data:
+  data_dtype: uint16
+  train_data: output/encoded_dataset-train.npy
+  val_data: output/encoded_dataset-valid.npy
+  vocab_path: output/vocab.pkl
+  merges_path: output/merges.pkl
+  ckpt_path: runs/smoke_test/ckpt_best.pt
+
+
+out_dir: runs/smoke_test     # separate dir so this doesn't clobber your real run
+resume: null
+log_interval: 5               # triggers at least a few times in 40 steps
+eval_interval: 10             # triggers a few times
+eval_batches: 2               # small so eval itself is fast
+ckpt_interval: 20             # triggers at least once (tests save_checkpoint path)
+wandb: true
+wandb_project: cse587-nlp-a1   # rename to `project` if/when you enable wandb (MetricLogger reads config["project"])
+run_name: null
+
+eos_token: '<|endoftext|>'
+max_new_tokens:
+temperature:
+top_p:
+

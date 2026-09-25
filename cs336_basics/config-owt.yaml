@@ -1,0 +1,54 @@
+device: auto
+
+model:
+  vocab_size: 32000
+  context_length: 256
+  d_model: 512
+  num_layers: 4
+  num_heads: 16
+  d_ff: 1344
+  rope_theta: 10000
+
+
+optimizer:
+  lr: 0.001
+  min_lr: null
+  warmup_iters: 200
+  beta1: 0.9
+  beta2: 0.95
+  eps: 1.0e-8
+  grad_clip: 1.0
+  weight_decay: 0.01
+
+
+training:
+  max_steps: 110000
+  total_tokens: 327680000
+  batch_size: 8
+  context_length: 256
+  seed: 0
+
+
+data:
+  data_dtype: uint16
+  train_data: output/owt_train.uint16.bin
+  val_data: output/owt_valid.uint16.bin
+  vocab_path: output/vocab_owt.pkl
+  merges_path: output/merges_owt.pkl
+  ckpt_path: runs/owt/default/ckpt_best.pt
+
+
+out_dir: runs/owt/default
+resume: runs/owt/default/ckpt_last.pt
+log_interval: 50
+eval_interval: 500
+eval_batches: 20
+ckpt_interval: 2000
+wandb: true
+wandb_project: cse587-nlp-a1
+run_name: null
+
+eos_token: '<|endoftext|>'
+max_new_tokens: 128
+temperature: 1.0
+top_p: 1.0

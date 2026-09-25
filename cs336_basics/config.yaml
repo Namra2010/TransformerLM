@@ -13,7 +13,7 @@ model:
 optimizer:
   lr: 0.001
   min_lr: null
-  warmup_iters: 100
+  warmup_iters: 200
   beta1: 0.9
   beta2: 0.95
   eps: 1.0e-8
@@ -22,33 +22,33 @@ optimizer:
 
 
 training:
-  max_steps: 20000
+  max_steps: 120000
   total_tokens: 327680000
-  batch_size: 64
+  batch_size: 16
   context_length: 256
   seed: 0
 
 
 data:
   data_dtype: uint16
-  train_data: data/TinyStoriesV2-GPT4-train.npy
-  val_data: data/TinyStoriesV2-GPT4-valid.npy
-  vocab_path: data/vocab.pkl
-  merges_path: data/merges.pkl
+  train_data: output/encoded_dataset-train.npy
+  val_data: output/encoded_dataset-valid.npy
+  vocab_path: output/vocab.pkl
+  merges_path: output/merges.pkl
   ckpt_path: runs/default/ckpt_best.pt
 
 
 out_dir: runs/default
-resume: null
+resume: runs/default/ckpt_last.pt
 log_interval: 50
 eval_interval: 500
 eval_batches: 20
 ckpt_interval: 2000
-wandb: false
+wandb: true
 wandb_project: cse587-nlp-a1
 run_name: null
 
 eos_token: '<|endoftext|>'
-max_new_tokens:
-temperature:
-top_p:
+max_new_tokens: 128
+temperature: 1.0
+top_p: 1.0
